@@ -1,0 +1,57 @@
+{
+  "generatedAt": "2026-08-31T19:52:37.008Z",
+  "business": "A Heavenly place in Hair",
+  "sourceBoundary": "Public pages only. No logged-in DaySmart admin, customer, appointment, payment, or private profile data is used.",
+  "counts": {
+    "serviceCategories": 6,
+    "services": 75,
+    "teamMembers": 2,
+    "imageEntries": 16
+  },
+  "sourceIds": [
+    "current-home",
+    "current-services",
+    "current-employees",
+    "current-contact",
+    "current-booking",
+    "daysmart-booking-doc",
+    "owner-provided-assets-2026-06-09",
+    "owner-provided-social-links-2026-06-09",
+    "owner-provided-gallery-2026-06-09",
+    "owner-provided-assets-2026-06-15",
+    "owner-provided-gallery-2026-06-15",
+    "owner-provided-assets-2026-06-21"
+  ],
+  "gaps": [
+    {
+      "field": "service pricing and durations",
+      "status": "uncertain",
+      "reason": "Public service list exposed names/categories but not a verified complete pricing table.",
+      "nextAction": "Keep prices out of v1 marketing copy unless the owner verifies them."
+    },
+    {
+      "field": "owner story copy",
+      "status": "draft",
+      "reason": "Story copy drafted from public tagline + role + services data. Awaits owner review.",
+      "nextAction": "Owner reviews + edits OwnerFeature.jsx story paragraphs before public publish."
+    },
+    {
+      "field": "testimonials",
+      "status": "draft",
+      "reason": "3 placeholder slots created in Testimonials.jsx per CEO review C0-3. No real client reviews captured yet.",
+      "nextAction": "Owner supplies 3 favorite testimonials OR L'Mont pulls 3 top-rated Google Reviews with attribution. Replace placeholder objects in Testimonials.jsx."
+    },
+    {
+      "field": "custom domain",
+      "status": "uncertain",
+      "reason": "Site currently lives at aheavenlyplaceinhair.mysalononline.com which now redirects to DaySmart auth wall. The new public site needs a permanent home.",
+      "nextAction": "Recommend: register aheavenlyplaceinhair.com (or owner-preferred), deploy new site, redirect mysalononline subdomain when DNS propagates. Decision before launch."
+    },
+    {
+      "field": "founding year",
+      "status": "uncertain",
+      "reason": "Year salon was established not captured from public pages.",
+      "nextAction": "Owner confirms founding year for optional 'Est. <year>' eyebrow in hero or footer. Skip the eyebrow entirely if uncertain — placeholder eyebrows undermine credibility worse than no eyebrow (designer note)."
+    }
+  ]
+}
