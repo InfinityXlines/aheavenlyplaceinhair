@@ -1,0 +1,26 @@
+name: patch-shae-portrait-bio
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/patch-shae-portrait-bio.yml
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Patch live JS and CSS in place
+        run: python3 .github/workflows/patch_shae_portrait_bio.py
+      - name: Commit if changed
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add assets/index-CXFuCwok.js assets/index-DvYe85UV.css
+          git diff --cached --quiet && echo "no changes" && exit 0
+          git commit -m "Make Shae portrait bio one paragraph — versatile beyond locs."
+          git push
