@@ -11,16 +11,77 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
       - name: Patch live JS and CSS in place
-        run: python3 .github/workflows/patch_shae_portrait_bio.py
+        run: |
+          python3 << 'PY'
+          from pathlib import Path
+
+          js_path = Path("assets/index-CXFuCwok.js")
+          js = js_path.read_text()
+          if "versatile beyond locs" in js and "owner-featured-bio" in js:
+              print("already patched")
+          else:
+              old_bio = (
+                  'featuredBio:"Shae has 33 years of servicing healthy hair and hair growth. '
+                  "She\u2019s a master stylist, teacher, and mentor extraordinaire."
+              )
+              new_bio = (
+                  'featuredBio:"Shae has 33 years of servicing healthy hair and hair growth. '
+                  "She\u2019s a master stylist, teacher, and mentor extraordinaire \u2014 "
+                  "versatile beyond locs, from braids and weaves to color and treatments."
+              )
+              if js.count(old_bio) != 1:
+                  raise SystemExit(f"featuredBio count={js.count(old_bio)}")
+              js = js.replace(old_bio, new_bio, 1)
+
+              old_team = (
+                  'teamBio:"Shae owns the chair. Loctician, teacher, mentor \u2014 healthy hair is the work."'
+              )
+              new_team = old_team + ',signatureNote:"Locs are a signature, not the whole chair."'
+              if js.count(old_team) != 1:
+                  raise SystemExit(f"teamBio count={js.count(old_team)}")
+              js = js.replace(old_team, new_team, 1)
+
+              start = js.find('className:"owner-story",children:[')
+              end = js.find('s.jsxs("div",{className:"owner-actions"', start)
+              if start < 0 or end < 0:
+                  raise SystemExit(f"owner-story slice start={start} end={end}")
+              new_block = (
+                  'className:"owner-story",children:['
+                  's.jsx("p",{className:"owner-featured-bio",children:Na.featuredBio||Na.bio}),'
+                  's.jsxs("div",{className:"owner-signature",children:['
+                  's.jsx("h3",{children:"Signature services"}),'
+                  's.jsx("ul",{children:Cv.map(d=>s.jsx("li",{children:d},d))}),'
+                  'Na.signatureNote?s.jsx("p",{className:"owner-signature-note",children:Na.signatureNote}):null]}),'
+              )
+              js = js[:start] + new_block + js[end:]
+              if js.count("versatile beyond locs") != 1:
+                  raise SystemExit("versatile count")
+              if "owner-featured-bio" not in js:
+                  raise SystemExit("missing owner-featured-bio")
+              if ".split(new RegExp" in js[start:start+400]:
+                  raise SystemExit("split still in owner-story")
+              js_path.write_text(js)
+              print("patched JS", js_path)
+
+          css_path = Path("assets/index-DvYe85UV.css")
+          css = css_path.read_text()
+          if ".owner-signature-note" not in css:
+              needle = ".owner-story p{margin-bottom:1.15rem;font-size:1.05rem;line-height:1.75;color:#3b2e29}"
+              insert = needle + ".owner-story .owner-featured-bio{margin-bottom:1.15rem}.owner-signature-note{margin:.7rem 0 0;font-size:.9rem;font-style:italic;font-weight:400;letter-spacing:.01em;color:#6b5a54;line-height:1.45}"
+              if needle not in css:
+                  raise SystemExit("css needle missing")
+              css = css.replace(needle, insert, 1)
+              css_path.write_text(css)
+              print("patched CSS")
+          else:
+              print("css already patched")
+          PY
       - name: Commit if changed
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add assets/index-CXFuCwok.js assets/index-DvYe85UV.css
-          git diff --cached --quiet && echo "no changes" && exit 0
+          if git diff --cached --quiet; then echo no changes; exit 0; fi
           git commit -m "Make Shae portrait bio one paragraph — versatile beyond locs."
           git push
