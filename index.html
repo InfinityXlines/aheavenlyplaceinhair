@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="royal">
   <head>
     <meta charset="UTF-8" />
     <script>
@@ -17,7 +17,7 @@
       name="description"
       content="Welcoming hair salon in Fort Walton Beach, FL specializing in locs, braids, color, treatments, weaves, and styling for every texture and every age. Book with Shae Thompson today."
     />
-    <meta name="theme-color" content="#fbf6ee" />
+    <meta name="theme-color" content="#fdf6f0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
@@ -86,6 +86,11 @@
       })()
     </script>
     <style>
+      /* Intro-card colours per theme (mirrors src/themes.css; keep in sync when adding a theme) */
+      :root, :root[data-theme="royal"] { --pre-bg: #fdf6f0; --pre-ink: #241433; --pre-gold: #c8963c; --pre-plum: #b02e7c; }
+      :root[data-theme="celestial"] { --pre-bg: #f7f6fb; --pre-ink: #10132e; --pre-gold: #c8963c; --pre-plum: #b0308a; }
+      :root[data-theme="emerald"] { --pre-bg: #fbf7ef; --pre-ink: #10221c; --pre-gold: #c8963c; --pre-plum: #c2405c; }
+      :root[data-theme="cream"] { --pre-bg: #fbf6ee; --pre-ink: #2b1c19; --pre-gold: #c48b2e; --pre-plum: #5a2e3b; }
       html.is-preloading,
       html.is-preloading body {
         overflow: hidden;
@@ -101,7 +106,7 @@
         display: grid;
         place-items: center;
         background: transparent;
-        color: #2b1c19;
+        color: var(--pre-ink, #2b1c19);
         pointer-events: all;
       }
       html.intro-short #hh-preloader { --intro-offset: 120ms; }
@@ -111,7 +116,7 @@
         inset: 0;
         z-index: 1;
         overflow: hidden;
-        background: #2b1c19;
+        background: var(--pre-ink, #2b1c19);
         animation: hhMontageOut 460ms ease 1620ms forwards;
       }
       html.intro-short .preloader-montage { display: none; }
@@ -138,7 +143,7 @@
         bottom: 11%;
         margin: 0;
         transform: translateX(-50%);
-        color: #fbf6ee;
+        color: var(--pre-bg, #fbf6ee);
         font-family: Inter, system-ui, sans-serif;
         font-size: 0.68rem;
         font-weight: 800;
@@ -167,7 +172,7 @@
         left: 0;
         right: 0;
         height: 50%;
-        background: #fbf6ee;
+        background: var(--pre-bg, #fbf6ee);
         z-index: 0;
         transition: transform 900ms cubic-bezier(0.76, 0, 0.24, 1);
       }
@@ -185,7 +190,7 @@
       }
       .preloader-eyebrow {
         margin: 0;
-        color: #c48b2e;
+        color: var(--pre-gold, #c48b2e);
         font-family: Inter, system-ui, sans-serif;
         font-size: 0.68rem;
         font-weight: 800;
@@ -203,7 +208,7 @@
         font-weight: 500;
         letter-spacing: 0.18em;
         padding-left: 0.18em;
-        color: #2b1c19;
+        color: var(--pre-ink, #2b1c19);
         line-height: 0.9;
         opacity: 0;
         transform: scale(0.92);
@@ -215,7 +220,7 @@
         width: 0;
         height: 2px;
         margin: 0.55rem 0 0.35rem;
-        background: #c48b2e;
+        background: var(--pre-gold, #c48b2e);
         animation: hhLine 1200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
         animation-delay: calc(var(--intro-offset) + 720ms);
       }
@@ -227,7 +232,7 @@
         font-weight: 500;
         letter-spacing: -0.045em;
         line-height: 0.92;
-        color: #2b1c19;
+        color: var(--pre-ink, #2b1c19);
         opacity: 0;
         transform: translateY(28px) scale(0.96);
         animation: hhNameIn 1400ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -238,7 +243,7 @@
         font-family: 'Fraunces', Georgia, "Times New Roman", serif;
         font-style: italic;
         font-size: clamp(1.25rem, 3.2vw, 2.05rem);
-        color: #5a2e3b;
+        color: var(--pre-plum, #5a2e3b);
         opacity: 0;
         transform: translateY(18px);
         animation: hhFadeUp 1100ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -277,8 +282,8 @@
         html.is-preloading #root { opacity: 1; }
       }
     </style>
-    <script type="module" crossorigin src="/assets/index-jg17TVfI.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-VvnUhBU_.css">
+    <script type="module" crossorigin src="/assets/index-PGdx8c_l.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DNDQZ2Y6.css">
   </head>
   <body>
     <div id="hh-preloader" aria-hidden="true">
