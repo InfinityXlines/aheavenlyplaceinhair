@@ -2,6 +2,15 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      // Force HTTPS on the public domain. GitHub Pages' own http→https redirect is off until its
+      // certificate re-issues; the browser hits this before anything renders. No-op elsewhere.
+      (function () {
+        if (window.location.protocol === 'http:' && window.location.hostname === 'aheavenlyplaceinhair.com') {
+          window.location.replace('https://' + window.location.host + window.location.pathname + window.location.search + window.location.hash)
+        }
+      })()
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>A Heavenly place in Hair | Salon in Fort Walton Beach, FL</title>
     <meta
