@@ -3,32 +3,37 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>A Heavenly place in Hair — Locs, Braids, Color & Healthy Hair Care in Fort Walton Beach</title>
+    <title>A Heavenly place in Hair | Salon in Fort Walton Beach, FL</title>
     <meta
       name="description"
       content="Welcoming hair salon in Fort Walton Beach, FL specializing in locs, braids, color, treatments, weaves, and styling for every texture and every age. Book with Shae Thompson today."
     />
     <meta name="theme-color" content="#fbf6ee" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
     <link rel="canonical" href="https://aheavenlyplaceinhair.com" />
     <meta property="og:url" content="https://aheavenlyplaceinhair.com" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="business.business" />
+    <meta property="og:site_name" content="A Heavenly place in Hair" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:title" content="A Heavenly place in Hair — Fort Walton Beach Salon" />
     <meta property="og:description" content="Healthy hair care for every texture, every gender, every age. Locs, braids, color, treatments, and more — by stylists who treat you like family." />
-    <meta property="og:image" content="/assets/team/owner-shae-thompson.jpeg" />
-    <meta property="og:image:width" content="790" />
-    <meta property="og:image:height" content="1318" />
-    <meta property="og:image:alt" content="Shae Thompson, owner of A Heavenly place in Hair" />
+    <meta property="og:image" content="https://aheavenlyplaceinhair.com/assets/share/og-card.jpg" />
+    <meta property="og:image:secure_url" content="https://aheavenlyplaceinhair.com/assets/share/og-card.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="A Heavenly place in Hair, a salon in Fort Walton Beach, with owner Shae Thompson" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="A Heavenly place in Hair" />
     <meta name="twitter:description" content="Locs, braids, color, healthy hair care in Fort Walton Beach, FL." />
-    <meta name="twitter:image" content="/assets/team/owner-shae-thompson.jpeg" />
-    <meta name="twitter:image:alt" content="Shae Thompson, owner of A Heavenly place in Hair" />
+    <meta name="twitter:image" content="https://aheavenlyplaceinhair.com/assets/share/og-card.jpg" />
+    <meta name="twitter:image:alt" content="A Heavenly place in Hair, a salon in Fort Walton Beach, with owner Shae Thompson" />
 
     <!-- Fonts: Fraunces (display, variable: opsz + wght + SOFT axis used via font-variation-settings) + Inter (body) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -39,9 +44,14 @@
     />
     <script>
       (function () {
+        var root = document.documentElement
         var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-        if (!reduce) {
-          document.documentElement.classList.add('is-preloading')
+        var seen = false
+        try { seen = window.sessionStorage.getItem('hh-intro-seen') === '1' } catch (error) { seen = false }
+        if (reduce || seen) {
+          root.classList.add('skip-intro')
+        } else {
+          root.classList.add('is-preloading')
         }
       })()
     </script>
@@ -120,7 +130,7 @@
       .preloader-name {
         margin: 0;
         max-width: 11ch;
-        font-family: Georgia, "Times New Roman", serif;
+        font-family: 'Fraunces', Georgia, "Times New Roman", serif;
         font-size: clamp(3.4rem, 11vw, 7.4rem);
         font-weight: 500;
         letter-spacing: -0.045em;
@@ -132,7 +142,7 @@
       }
       .preloader-tag {
         margin: 0.35rem 0 0;
-        font-family: Georgia, "Times New Roman", serif;
+        font-family: 'Fraunces', Georgia, "Times New Roman", serif;
         font-style: italic;
         font-size: clamp(1.25rem, 3.2vw, 2.05rem);
         color: #5a2e3b;
@@ -158,19 +168,19 @@
       }
       #hh-preloader.is-exiting .preloader-panel-top {
         transform: translateY(-105%);
-        transition-duration: 1100ms;
+        transition-duration: 900ms;
       }
       #hh-preloader.is-exiting .preloader-panel-bottom {
         transform: translateY(105%);
-        transition-duration: 1100ms;
+        transition-duration: 900ms;
       }
       @media (prefers-reduced-motion: reduce) {
         #hh-preloader { display: none !important; }
         html.is-preloading #root { opacity: 1; }
       }
     </style>
-    <script type="module" crossorigin src="/assets/index-CXFuCwok.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-DvYe85UV.css">
+    <script type="module" crossorigin src="/assets/index-DcHbjpvg.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-YutwnptQ.css">
   </head>
   <body>
     <div id="hh-preloader" aria-hidden="true">
@@ -184,10 +194,9 @@
     </div>
     <script>
       (function () {
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        if (document.documentElement.classList.contains('skip-intro')) {
           var el = document.getElementById('hh-preloader')
           if (el) el.remove()
-          document.documentElement.classList.remove('is-preloading')
         }
       })()
     </script>
