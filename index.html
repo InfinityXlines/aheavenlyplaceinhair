@@ -48,11 +48,32 @@
         var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
         var seen = false
         try { seen = window.sessionStorage.getItem('hh-intro-seen') === '1' } catch (error) { seen = false }
-        if (reduce || seen) {
+        if (reduce) {
           root.classList.add('skip-intro')
-        } else {
-          root.classList.add('is-preloading')
+          return
         }
+        root.classList.add('is-preloading')
+        if (seen) {
+          root.classList.add('intro-short')
+          return
+        }
+        // First visit this tab: preload the montage frames so the cuts land on time.
+        var frames = [
+          '/assets/gallery/locs/portrait-ready-locs-10-560.webp',
+          '/assets/gallery/braids/braided-crown-detail-01-560.webp',
+          '/assets/gallery/color-styling/glass-silk-press-04-560.webp',
+          '/assets/gallery/color-styling/honey-curl-color-06-560.webp'
+        ]
+        // match the browser's srcset choice (sizes=100vw): CSS width × device pixel ratio
+        var wide = window.innerWidth * (window.devicePixelRatio || 1) > 700
+        frames.forEach(function (href) {
+          var link = document.createElement('link')
+          link.rel = 'preload'
+          link.as = 'image'
+          link.type = 'image/webp'
+          link.href = wide ? href.replace('-560.webp', '-1100.webp') : href
+          document.head.appendChild(link)
+        })
       })()
     </script>
     <style>
@@ -64,6 +85,7 @@
         opacity: 0;
       }
       #hh-preloader {
+        --intro-offset: 1700ms;
         position: fixed;
         inset: 0;
         z-index: 9999;
@@ -72,6 +94,64 @@
         background: transparent;
         color: #2b1c19;
         pointer-events: all;
+      }
+      html.intro-short #hh-preloader { --intro-offset: 120ms; }
+      /* Cinematic montage: four quick cuts of real work, then a fade to the cream title card */
+      .preloader-montage {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        overflow: hidden;
+        background: #2b1c19;
+        animation: hhMontageOut 460ms ease 1620ms forwards;
+      }
+      html.intro-short .preloader-montage { display: none; }
+      .preloader-montage img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 22%;
+        opacity: 0;
+        transform: scale(1.1);
+        animation: hhCut 430ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        animation-delay: calc(var(--m) * 400ms);
+      }
+      .preloader-montage-veil {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(43, 28, 25, 0.06), rgba(43, 28, 25, 0.42));
+      }
+      .preloader-montage-word {
+        position: absolute;
+        left: 50%;
+        bottom: 11%;
+        margin: 0;
+        transform: translateX(-50%);
+        color: #fbf6ee;
+        font-family: Inter, system-ui, sans-serif;
+        font-size: 0.68rem;
+        font-weight: 800;
+        max-width: 92vw;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        text-align: center;
+        white-space: normal;
+        opacity: 0;
+        animation: hhFadeUp 600ms ease 160ms forwards;
+      }
+      @media (max-width: 480px) {
+        .preloader-montage-word { font-size: 0.6rem; letter-spacing: 0.2em; }
+      }
+      @keyframes hhCut {
+        0% { opacity: 0; transform: scale(1.1); }
+        14% { opacity: 1; }
+        86% { opacity: 1; transform: scale(1.02); }
+        100% { opacity: 0; transform: scale(1.02); }
+      }
+      @keyframes hhMontageOut {
+        to { opacity: 0; visibility: hidden; }
       }
       .preloader-panel {
         position: absolute;
@@ -104,7 +184,8 @@
         text-transform: uppercase;
         opacity: 0;
         transform: translateY(10px);
-        animation: hhFadeUp 700ms cubic-bezier(0.22, 1, 0.36, 1) 180ms forwards;
+        animation: hhFadeUp 700ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        animation-delay: calc(var(--intro-offset) + 180ms);
       }
       .preloader-mark {
         margin: 0;
@@ -117,7 +198,8 @@
         line-height: 0.9;
         opacity: 0;
         transform: scale(0.92);
-        animation: hhMark 900ms cubic-bezier(0.22, 1, 0.36, 1) 280ms forwards;
+        animation: hhMark 900ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        animation-delay: calc(var(--intro-offset) + 280ms);
       }
       .preloader-line {
         display: block;
@@ -125,7 +207,8 @@
         height: 2px;
         margin: 0.55rem 0 0.35rem;
         background: #c48b2e;
-        animation: hhLine 1200ms cubic-bezier(0.16, 1, 0.3, 1) 720ms forwards;
+        animation: hhLine 1200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        animation-delay: calc(var(--intro-offset) + 720ms);
       }
       .preloader-name {
         margin: 0;
@@ -138,7 +221,8 @@
         color: #2b1c19;
         opacity: 0;
         transform: translateY(28px) scale(0.96);
-        animation: hhNameIn 1400ms cubic-bezier(0.16, 1, 0.3, 1) 220ms forwards;
+        animation: hhNameIn 1400ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        animation-delay: calc(var(--intro-offset) + 220ms);
       }
       .preloader-tag {
         margin: 0.35rem 0 0;
@@ -148,7 +232,8 @@
         color: #5a2e3b;
         opacity: 0;
         transform: translateY(18px);
-        animation: hhFadeUp 1100ms cubic-bezier(0.16, 1, 0.3, 1) 1100ms forwards;
+        animation: hhFadeUp 1100ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        animation-delay: calc(var(--intro-offset) + 1000ms);
       }
       @keyframes hhNameIn {
         to { opacity: 1; transform: translateY(0) scale(1); }
@@ -159,6 +244,10 @@
       }
       @keyframes hhFadeUp {
         to { opacity: 1; transform: translateY(0); }
+      }
+      #hh-preloader.is-exiting .preloader-montage {
+        opacity: 0;
+        transition: opacity 300ms ease;
       }
       #hh-preloader.is-exiting .preloader-center {
         opacity: 0;
@@ -179,14 +268,23 @@
         html.is-preloading #root { opacity: 1; }
       }
     </style>
-    <script type="module" crossorigin src="/assets/index-DcHbjpvg.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-YutwnptQ.css">
+    <script type="module" crossorigin src="/assets/index-jg17TVfI.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-VvnUhBU_.css">
   </head>
   <body>
     <div id="hh-preloader" aria-hidden="true">
       <div class="preloader-panel preloader-panel-top"></div>
       <div class="preloader-panel preloader-panel-bottom"></div>
+      <div class="preloader-montage">
+        <img src="/assets/gallery/locs/portrait-ready-locs-10-560.webp" srcset="/assets/gallery/locs/portrait-ready-locs-10-560.webp 560w, /assets/gallery/locs/portrait-ready-locs-10-1100.webp 1100w" sizes="100vw" alt="" style="--m: 0" decoding="sync" />
+        <img src="/assets/gallery/braids/braided-crown-detail-01-560.webp" srcset="/assets/gallery/braids/braided-crown-detail-01-560.webp 560w, /assets/gallery/braids/braided-crown-detail-01-1100.webp 1100w" sizes="100vw" alt="" style="--m: 1" decoding="sync" />
+        <img src="/assets/gallery/color-styling/glass-silk-press-04-560.webp" srcset="/assets/gallery/color-styling/glass-silk-press-04-560.webp 560w, /assets/gallery/color-styling/glass-silk-press-04-1100.webp 1100w" sizes="100vw" alt="" style="--m: 2" decoding="sync" />
+        <img src="/assets/gallery/color-styling/honey-curl-color-06-560.webp" srcset="/assets/gallery/color-styling/honey-curl-color-06-560.webp 560w, /assets/gallery/color-styling/honey-curl-color-06-1100.webp 1100w" sizes="100vw" alt="" style="--m: 3" decoding="sync" />
+        <span class="preloader-montage-veil"></span>
+        <p class="preloader-montage-word">Fort Walton Beach, FL</p>
+      </div>
       <div class="preloader-center">
+        <p class="preloader-eyebrow">Fort Walton Beach, FL</p>
         <p class="preloader-name">A Heavenly place in Hair</p>
         <span class="preloader-line"></span>
         <p class="preloader-tag">Ministering to the self-esteem</p>
