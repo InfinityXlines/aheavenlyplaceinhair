@@ -1,5 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="A Heavenly place in Hair">
-  <rect width="64" height="64" rx="14" fill="#fdf6f0"/>
-  <circle cx="32" cy="32" r="25" fill="#f1e8fa" stroke="#6b2fa0" stroke-width="3"/>
-  <text x="32" y="38" text-anchor="middle" font-family="Georgia, serif" font-size="20" font-weight="700" fill="#4b1d78">HH</text>
+  <rect width="64" height="64" rx="12" fill="#faf8f5"/>
+  <path d="M32 6C18 6 10 17 10 32v6c0 13 9 20 22 20s22-7 22-20v-6C54 17 46 6 32 6Z" fill="none" stroke="#bba181" stroke-width="1.5"/>
+  <g fill="#35232f" font-family="Georgia, serif" font-size="37">
+    <text x="15" y="40">h</text>
+    <text x="29" y="44">h</text>
+  </g>
 </svg>
