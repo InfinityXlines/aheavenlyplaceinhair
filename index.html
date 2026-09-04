@@ -48,10 +48,287 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <script type="module" crossorigin src="/assets/index-YugouqPL.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-BLVGZRoF.css">
+    <script>
+      (function () {
+        var root = document.documentElement
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        var seen = false
+        try { seen = window.sessionStorage.getItem('hh-intro-atelier-seen') === '1' } catch (error) { seen = false }
+        if (reduce) {
+          root.classList.add('skip-intro')
+          return
+        }
+        root.classList.add('is-preloading')
+        window.__hhIntroWatchdog = window.setTimeout(function () {
+          root.classList.remove('is-preloading')
+          var intro = document.getElementById('hh-preloader')
+          if (intro) intro.remove()
+          var app = document.getElementById('root')
+          if (app) app.inert = false
+          window.dispatchEvent(new CustomEvent('hh:intro-done'))
+        }, 6500)
+        if (seen) {
+          root.classList.add('intro-short')
+          return
+        }
+        // First visit this tab: preload the montage frames so the cuts land on time.
+        var frames = [
+          '/assets/gallery/locs/portrait-ready-locs-10-560.webp',
+          '/assets/gallery/braids/braided-crown-detail-01-560.webp',
+          '/assets/gallery/color-styling/glass-silk-press-04-560.webp',
+          '/assets/gallery/color-styling/honey-curl-color-06-560.webp'
+        ]
+        // match the browser's srcset choice (sizes=100vw): CSS width × device pixel ratio
+        var wide = window.innerWidth * (window.devicePixelRatio || 1) > 700
+        frames.forEach(function (href) {
+          var link = document.createElement('link')
+          link.rel = 'preload'
+          link.as = 'image'
+          link.type = 'image/webp'
+          link.href = wide ? href.replace('-560.webp', '-1100.webp') : href
+          document.head.appendChild(link)
+        })
+      })()
+    </script>
+    <style>
+      /* Intro-card colours per theme (mirrors src/themes.css; keep in sync when adding a theme) */
+      :root, :root[data-theme="royal"] { --pre-bg: #fdf6f0; --pre-ink: #241433; --pre-gold: #c8963c; --pre-plum: #b02e7c; }
+      :root[data-theme="celestial"] { --pre-bg: #f7f6fb; --pre-ink: #10132e; --pre-gold: #c8963c; --pre-plum: #b0308a; }
+      :root[data-theme="emerald"] { --pre-bg: #fbf7ef; --pre-ink: #10221c; --pre-gold: #c8963c; --pre-plum: #c2405c; }
+      :root[data-theme="cream"] { --pre-bg: #fbf6ee; --pre-ink: #2b1c19; --pre-gold: #c48b2e; --pre-plum: #5a2e3b; }
+      :root[data-theme="atelier"] { --pre-bg: #35232f; --pre-ink: #faf8f5; --pre-gold: #bba181; --pre-plum: #ead9d6; }
+      html.is-preloading,
+      html.is-preloading body {
+        overflow: hidden;
+      }
+      html.is-preloading #root {
+        visibility: hidden;
+        opacity: 0;
+      }
+      #hh-preloader {
+        --intro-offset: 1700ms;
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: grid;
+        place-items: center;
+        background: transparent;
+        color: var(--pre-ink, #2b1c19);
+        pointer-events: all;
+      }
+      html.intro-short #hh-preloader { --intro-offset: 120ms; }
+      /* Cinematic montage: four quick cuts of real work, then a fade to the cream title card */
+      .preloader-montage {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        overflow: hidden;
+        background: var(--pre-ink, #2b1c19);
+        animation: hhMontageOut 460ms ease 1620ms forwards;
+      }
+      html.intro-short .preloader-montage { display: none; }
+      .preloader-montage img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 22%;
+        opacity: 0;
+        transform: scale(1.1);
+        animation: hhCut 430ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        animation-delay: calc(var(--m) * 400ms);
+      }
+      .preloader-montage-veil {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(43, 28, 25, 0.06), rgba(43, 28, 25, 0.42));
+      }
+      .preloader-montage-word {
+        position: absolute;
+        left: 50%;
+        bottom: 11%;
+        margin: 0;
+        transform: translateX(-50%);
+        color: var(--pre-bg, #fbf6ee);
+        font-family: Manrope, system-ui, sans-serif;
+        font-size: 0.68rem;
+        font-weight: 800;
+        max-width: 92vw;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        text-align: center;
+        white-space: normal;
+        opacity: 0;
+        animation: hhMontageLabel 600ms ease 160ms forwards;
+      }
+      @media (max-width: 480px) {
+        .preloader-montage-word { font-size: 0.6rem; letter-spacing: 0.2em; }
+      }
+      @keyframes hhMontageLabel { to { opacity: 1; } }
+      @keyframes hhCut {
+        0% { opacity: 0; transform: scale(1.1); }
+        14% { opacity: 1; }
+        86% { opacity: 1; transform: scale(1.02); }
+        100% { opacity: 0; transform: scale(1.02); }
+      }
+      @keyframes hhMontageOut {
+        to { opacity: 0; visibility: hidden; }
+      }
+      .preloader-panel {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 50%;
+        background: var(--pre-bg, #fbf6ee);
+        z-index: 0;
+        transition: transform 900ms cubic-bezier(0.76, 0, 0.24, 1);
+      }
+      .preloader-panel-top { top: 0; }
+      .preloader-panel-bottom { bottom: 0; }
+      .preloader-center {
+        position: relative;
+        z-index: 2;
+        display: grid;
+        justify-items: center;
+        gap: 0.2rem;
+        text-align: center;
+        padding: 2rem 1.25rem 2.4rem;
+        max-width: min(92vw, 980px);
+      }
+      .preloader-eyebrow {
+        margin: 0;
+        color: var(--pre-gold, #c48b2e);
+        font-family: Manrope, system-ui, sans-serif;
+        font-size: 0.68rem;
+        font-weight: 800;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        opacity: 0;
+        transform: translateY(10px);
+        animation: hhFadeUp 700ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        animation-delay: calc(var(--intro-offset) + 180ms);
+      }
+      .preloader-mark {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(3.4rem, 9vw, 5.6rem);
+        font-weight: 500;
+        letter-spacing: 0.18em;
+        padding-left: 0.18em;
+        color: var(--pre-ink, #2b1c19);
+        line-height: 0.9;
+        opacity: 0;
+        transform: scale(0.92);
+        animation: hhMark 900ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        animation-delay: calc(var(--intro-offset) + 280ms);
+      }
+      .preloader-line {
+        display: block;
+        width: 0;
+        height: 2px;
+        margin: 0.55rem 0 0.35rem;
+        background: var(--pre-gold, #c48b2e);
+        animation: hhLine 1200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        animation-delay: calc(var(--intro-offset) + 720ms);
+      }
+      .preloader-name {
+        margin: 0;
+        max-width: 11ch;
+        font-family: 'Cormorant Garamond', Georgia, "Times New Roman", serif;
+        font-size: clamp(3.4rem, 11vw, 7.4rem);
+        font-weight: 500;
+        letter-spacing: -0.045em;
+        line-height: 0.92;
+        color: var(--pre-ink, #2b1c19);
+        opacity: 0;
+        transform: translateY(28px) scale(0.96);
+        animation: hhNameIn 1400ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        animation-delay: calc(var(--intro-offset) + 220ms);
+      }
+      .preloader-tag {
+        margin: 0.35rem 0 0;
+        font-family: 'Cormorant Garamond', Georgia, "Times New Roman", serif;
+        font-style: italic;
+        font-size: clamp(1.25rem, 3.2vw, 2.05rem);
+        color: var(--pre-plum, #5a2e3b);
+        opacity: 0;
+        transform: translateY(18px);
+        animation: hhFadeUp 1100ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        animation-delay: calc(var(--intro-offset) + 1000ms);
+      }
+      @keyframes hhNameIn {
+        to { opacity: 1; transform: translateY(0) scale(1); }
+      }
+      @keyframes hhLine {
+        from { width: 0; }
+        to { width: min(58vw, 340px); }
+      }
+      @keyframes hhFadeUp {
+        to { opacity: 1; transform: translateY(0); }
+      }
+      #hh-preloader.is-exiting .preloader-montage {
+        opacity: 0;
+        transition: opacity 300ms ease;
+      }
+      #hh-preloader.is-exiting .preloader-center {
+        opacity: 0;
+        transform: translateY(-28px) scale(1.04);
+        letter-spacing: 0.04em;
+        transition: opacity 700ms ease, transform 900ms cubic-bezier(0.76, 0, 0.24, 1);
+      }
+      #hh-preloader.is-exiting .preloader-panel-top {
+        transform: translateY(-105%);
+        transition-duration: 900ms;
+      }
+      #hh-preloader.is-exiting .preloader-panel-bottom {
+        transform: translateY(105%);
+        transition-duration: 900ms;
+      }
+      .preloader-skip {
+        position: absolute; top: max(22px, env(safe-area-inset-top)); right: 24px; z-index: 3;
+        padding: 12px 18px; min-height: 44px; border: 1px solid #bba181; border-radius: 30px;
+        background: #35232f; color: #faf8f5; font: 12px Manrope, sans-serif; cursor: pointer;
+      }
+      .preloader-skip:focus-visible { outline: 2px solid #bba181; outline-offset: 4px; }
+      #hh-preloader.is-exiting { pointer-events: none; }
+      #hh-preloader.is-exiting .preloader-skip { visibility: hidden; }
+      @media (prefers-reduced-motion: reduce) {
+        #hh-preloader { display: none !important; }
+        html.is-preloading #root { opacity: 1; visibility: visible; }
+      }
+    </style>
+    <script type="module" crossorigin src="/assets/index-gjSgd8ve.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-D6mNd-qm.css">
   </head>
   <body>
+    <div id="hh-preloader" role="dialog" aria-modal="true" aria-labelledby="intro-title">
+      <button class="preloader-skip" type="button">Skip intro</button>
+      <div class="preloader-panel preloader-panel-top"></div>
+      <div class="preloader-panel preloader-panel-bottom"></div>
+      <div class="preloader-montage" aria-hidden="true">
+        <img src="/assets/gallery/locs/portrait-ready-locs-10-560.webp" srcset="/assets/gallery/locs/portrait-ready-locs-10-560.webp 560w, /assets/gallery/locs/portrait-ready-locs-10-1100.webp 1100w" sizes="100vw" alt="" style="--m: 0" decoding="sync" />
+        <img src="/assets/gallery/braids/braided-crown-detail-01-560.webp" srcset="/assets/gallery/braids/braided-crown-detail-01-560.webp 560w, /assets/gallery/braids/braided-crown-detail-01-1100.webp 1100w" sizes="100vw" alt="" style="--m: 1" decoding="sync" />
+        <img src="/assets/gallery/color-styling/glass-silk-press-04-560.webp" srcset="/assets/gallery/color-styling/glass-silk-press-04-560.webp 560w, /assets/gallery/color-styling/glass-silk-press-04-1100.webp 1100w" sizes="100vw" alt="" style="--m: 2" decoding="sync" />
+        <img src="/assets/gallery/color-styling/honey-curl-color-06-560.webp" srcset="/assets/gallery/color-styling/honey-curl-color-06-560.webp 560w, /assets/gallery/color-styling/honey-curl-color-06-1100.webp 1100w" sizes="100vw" alt="" style="--m: 3" decoding="sync" />
+        <span class="preloader-montage-veil"></span>
+        <p class="preloader-montage-word">Fort Walton Beach, FL</p>
+      </div>
+      <div class="preloader-center">
+        <p class="preloader-eyebrow">Fort Walton Beach, FL</p>
+        <p class="preloader-name" id="intro-title">A Heavenly place in Hair</p>
+        <span class="preloader-line"></span>
+        <p class="preloader-tag">Ministering to the self-esteem</p>
+      </div>
+    </div>
+    <script>
+      (function () {
+        if (document.documentElement.classList.contains('skip-intro')) {
+          var el = document.getElementById('hh-preloader')
+          if (el) el.remove()
+        }
+      })()
+    </script>
     <div id="root"></div>
   </body>
 </html>
